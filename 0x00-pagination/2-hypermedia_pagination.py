@@ -76,4 +76,4 @@ class Server:
             "prev_page": page - 1 if page > 1 else None,
             "next_page": page + 1 if page + 1 <= total_pages else None
         }
-        return 
+        return info
