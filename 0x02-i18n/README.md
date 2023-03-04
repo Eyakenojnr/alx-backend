@@ -65,4 +65,4 @@ In your `get_locale` function, detect if the incoming request contains `locale` 
 Now you should be able to test different translations by visiting `http://127.0.0.1:5000?locale=[fr|en]`.
 
 **Visiting `http://127.0.0.1:5000/?locale=fr` should display this level 1 heading:`**
-![](https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2020/3/f958f4a1529b535027ce.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20230304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230304T005821Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=9f6160d7a85da7eff3757f190f0114bac7a3a5c5bf965b148db0994af36558c0.png)
+![](https://thumbs2.imgbox.com/1c/59/LnJmZgb2_t.png)
