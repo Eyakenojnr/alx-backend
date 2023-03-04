@@ -47,7 +47,22 @@ $ pybabel init -i messages.pot -d translations -l en
 $ pybabel init -i messages.pot -d translations -l fr
 ```
 Then edit files `translations/[en|fr]/LC_MESSAGES/messages.po` to provide the correct value for each message ID for each language. Use the following translations:
-|   **msgid**  |        **Englis**        |          **French**          |
+|   **msgid**  |        **English**       |          **French**          |
 | ------------ | ------------------------ | ---------------------------- |
 | `home_title` | `"Welcome to Holberton"` | `"Bienvenue chez Holberton"` |
 | `home_header` | `"Hello world!"` | `"Bonjour monde!"` |
+Then compile your dictionaries with
+```
+$ pybabel compile -d translations
+```
+Reload the home page of your app and make sure that the correct messages show up.
+- **File:** `3-app.py, babel.cfg, templates/3-index.html, translations/en/LC_MESSAGES/messages.po, translations/fr/LC_MESSAGES/messages.po, translations/en/LC_MESSAGES/messages.mo, translations/fr/LC_MESSAGES/messages.mo`
+# 4. Force locale with URL parameter
+In this task, you will implement a way to force a particular locale by passing the `locale=fr` parameter to your app’s URLs.
+
+In your `get_locale` function, detect if the incoming request contains `locale` argument and ifs value is a supported locale, return it. If not or if the parameter is not present, resort to the previous default behavior.
+
+Now you should be able to test different translations by visiting `http://127.0.0.1:5000?locale=[fr|en]`.
+
+**Visiting `http://127.0.0.1:5000/?locale=fr` should display this level 1 heading:`**
+![](https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2020/3/f958f4a1529b535027ce.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20230304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230304T005821Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=9f6160d7a85da7eff3757f190f0114bac7a3a5c5bf965b148db0994af36558c0.png)
