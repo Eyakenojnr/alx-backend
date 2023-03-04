@@ -1,5 +1,4 @@
 # 0x02.i18n
-![](https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2020/1/91e1c50322b2428428f9.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20230304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230304T005821Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=856470b39f715a09a0bfee3da0022942964414985d5c73c2a15e0ac58965ad41)
 ## Resources
 * [Flask-Babel](https://flask-babel.tkte.ch/)
 * [Flask i18n tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-i18n-and-l10n)
@@ -51,13 +50,14 @@ Then edit files `translations/[en|fr]/LC_MESSAGES/messages.po` to provide the co
 | ------------ | ------------------------ | ---------------------------- |
 | `home_title` | `"Welcome to Holberton"` | `"Bienvenue chez Holberton"` |
 | `home_header` | `"Hello world!"` | `"Bonjour monde!"` |
+
 Then compile your dictionaries with
 ```
 $ pybabel compile -d translations
 ```
 Reload the home page of your app and make sure that the correct messages show up.
 - **File:** `3-app.py, babel.cfg, templates/3-index.html, translations/en/LC_MESSAGES/messages.po, translations/fr/LC_MESSAGES/messages.po, translations/en/LC_MESSAGES/messages.mo, translations/fr/LC_MESSAGES/messages.mo`
-# 4. Force locale with URL parameter
+### 4. Force locale with URL parameter
 In this task, you will implement a way to force a particular locale by passing the `locale=fr` parameter to your app’s URLs.
 
 In your `get_locale` function, detect if the incoming request contains `locale` argument and ifs value is a supported locale, return it. If not or if the parameter is not present, resort to the previous default behavior.
@@ -88,5 +88,48 @@ In your HTML template, if a user is logged in, in a paragraph tag, display a wel
 | --------- | ----------- | ---------- |
 | `logged_in_as` | `"You are logged in as %(username)s."` | `"Vous êtes connecté en tant que %(username)s."` |
 | `not_logged_in` | `"You are not logged in."` | `"Vous n'êtes pas connecté."` |
+
 **Visiting `http://127.0.0.1:5000/` in your browser should display this:**
-![](
+![](https://images2.imgbox.com/0d/a2/OzIn0fff_o.png)
+
+**Visiting `http://127.0.0.1:5000/?login_as=2` in your browser should display this:**
+![](https://images2.imgbox.com/66/0a/kHIccKPm_o.png)
+- **File:** `5-app.py, templates/5-index.html`
+### 6. Use user locale
+Change your `get_locale` function to use a user’s preferred local if it is supported.
+
+The order of priority should be
+    1. Locale from URL parameters
+    2. Locale from user settings
+    3. Locale from request header
+    4. Default locale
+
+Test by logging in as different users
+![](https://images2.imgbox.com/2e/4f/tXIZFXXl_o.png)
+- **File:** `6-app.py, templates/6-index.html`
+### 7. Infer appropriate time zone
+Define a `get_timezone` function and use the `babel.timezoneselector` decorator.
+
+The logic should be the same as `get_locale`:
+    1. Find timezone parameter in URL parameters
+    2. Find time zone from user settings
+    3. Default to UTC
+
+Before returning a URL-provided or user time zone, you must validate that it is a valid time zone. To that, use `pytz.timezone` and catch the `pytz.exceptions.UnknownTimeZoneError` exception.
+- **File:** `7-app.py, templates/7-index.html`
+### 8. Display the current time
+Based on the inferred time zone, display the current time on the home page in the default format. For example:
+
+`Jan 21, 2020, 5:55:39 AM or 21 janv. 2020 à 05:56:28`
+
+Use the following translations
+| **misgid** | **English** | **French** |
+| ---------- | ----------- | ---------- |
+| `current_time_is` | `"The current time is %(current_time)s."` | `"Nous sommes le %(current_time)s."` |
+
+**Displaying the time in French looks like this:**
+![](https://images2.imgbox.com/e8/ee/HbfN3NcY_o.png)
+
+**Displaying the time in English looks like this:**
+![](https://images2.imgbox.com/04/a0/NB4Ymnff_o.png)
+- **File:** `app.py, templates/index.html, translations/en/LC_MESSAGES/messages.po, translations/fr/LC_MESSAGES/messages.po`
