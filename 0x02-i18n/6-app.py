@@ -3,16 +3,8 @@
 Flask app
 """
 from flask_babel import Babel
-from flask import (
-    Flask, 
-    render_template, 
-    request, 
-    g
-)
-from typing import (
-    Dict,
-    Union
-)
+from flask import Flask, render_template, request, g
+from typing import Dict, Union
 
 
 users = {
@@ -47,6 +39,7 @@ def get_user() -> Union[Dict, None]:
         return users.get(int(id))
     return None
 
+
 @app.before_request
 def before_request():
     """
@@ -54,6 +47,7 @@ def before_request():
     """
     user = get_user()
     g.user = user
+
 
 @babel.localeselector
 def get_locale():
@@ -71,6 +65,7 @@ def get_locale():
     if loc in app.config["LANGUAGES"]:
         return loc
     return request.accept_languages.best_match(app.config["LANGUAGES"])
+
 
 @app.route('/', strict_slashes=False)
 def get_index() -> str:
