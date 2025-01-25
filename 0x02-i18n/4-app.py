@@ -30,6 +30,7 @@ def get_locale() -> str:
         return loc
     return request.accept_languages.best_match(app.config["LANGUAGES"])
 
+
 @app.route('/', strict_slashes=False)
 def get_index() -> str:
     """
