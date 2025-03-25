@@ -5,7 +5,7 @@ Deletion-resilient hypermedia pagination
 
 import csv
 import math
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class Server:
@@ -40,35 +40,21 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """
-        Takes 2 integer arguments and returns a dictionary with
-        the following key-value pairs:
-            index: index of the first item in the current page
-            next_index: index of the first item in the next page
-            page_size: the current page size
-            data: actual page of the dataset
-        Args:
-            index(int): first required index
-            page_size(int): required number of records per page
-        """
-        dataset = self.indexed_dataset()
-        data_length = len(dataset)
-        assert 0 <= index < data_length
-        response = {}
+        """Return a page of data while ensuring no data is skipped due to deletions."""
+        assert isinstance(index, int) and 0 <= index < len(self.indexed_dataset()), "Index out of range"
+        
+        indexed_data = self.indexed_dataset()
         data = []
-        response['index'] = index
-        for i in range(page_size):
-            while True:
-                curr = dataset.get(index)
-                index += 1
-                if curr is not None:
-                    break
-            data.append(curr)
+        current_index = index
 
-        response['data'] = data
-        response['page_size'] = len(data)
-        if dataset.get(index):
-            response['next_index'] = index
-        else:
-            response['next_index'] = None
-        return response
+        while len(data) < page_size and current_index < len(indexed_data):
+            if current_index in indexed_data:
+                data.append(indexed_data[current_index])
+            current_index += 1
+
+        return {
+            'index': index,
+            'data': data,
+            'page_size': len(data),
+            'next_index': current_index if current_index < len(indexed_data) else None,
+        }
