@@ -1,42 +1,35 @@
 #!/usr/bin/env python3
-""" BaseCaching module
-"""
+"""Implement LIFO cache"""
 from base_caching import BaseCaching
 
 
 class LIFOCache(BaseCaching):
-    """
-    FIFOCache defines a FIFO caching system
-    """
+    """Defines a LIFO caching system."""
 
     def __init__(self):
-        """
-        Initialize the class with the parent's init method
-        """
+        """Initialize the cache."""
         super().__init__()
-        self.order = []
+        self.order = [] # Track order of inserted keys
 
     def put(self, key, item):
-        """
-        Cache a key-value pair
-        """
+        """Add an item into cache using LIFO strategy."""
         if key is None or item is None:
-            pass
-        else:
-            length = len(self.cache_data)
-            if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
-                print("DISCARD: {}".format(self.order[-1]))
-                del self.cache_data[self.order[-1]]
-                del self.order[-1]
-            if key in self.order:
-                del self.order[self.order.index(key)]
-            self.order.append(key)
-            self.cache_data[key] = item
+            return
+
+        # Remove key if it already exists to update its position
+        if key in self.cache_data:
+            self.order.remove(key)
+
+        self.cache_data[key] = item
+        self.order.append(key)
+
+        # If number of items in cache_data is more than BaseCaching.MAX_ITEMS
+        #   - Discard the last item put in the cache
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            last_key = self.order.pop(-2)
+            del self.cache_data[last_key]
+            print(f"DISCARD: {last_key}")
 
     def get(self, key):
-        """
-        Return the value linked to a given key, or None
-        """
-        if key is not None and key in self.cache_data.keys():
-            return self.cache_data[key]
-        return None
+        """Get an item by key."""
+        return self.cache_data.get(key, None)
