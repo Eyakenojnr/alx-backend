@@ -1,43 +1,38 @@
 #!/usr/bin/env python3
-""" BaseCaching module
-"""
+"""LRU cache"""
 from base_caching import BaseCaching
 
 
 class LRUCache(BaseCaching):
-    """
-    FIFOCache defines a FIFO caching system
-    """
+    """Implements the LRU caching system."""
+
     def __init__(self):
-        """
-        Initialize the class with the parent's init method
-        """
         super().__init__()
-        self.usage = []
+        self.order = []  # Track the order of access
 
     def put(self, key, item):
-        """
-        Cache a key-value pair
-        """
+        """Add an item to the cache using LRU strategy"""
         if key is None or item is None:
-            pass
-        else:
-            length = len(self.cache_data)
-            if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
-                print("DISCARD: {}".format(self.usage[0]))
-                del self.cache_data[self.usage[0]]
-                del self.usage[0]
-            if key in self.usage:
-                del self.usage[self.usage.index(key)]
-            self.usage.append(key)
-            self.cache_data[key] = item
+            return
+
+        if key in self.cache_data:
+            self.order.remove(key)  # Remove key to update its position
+
+        self.cache_data[key] = item
+        self.order.append(key)
+
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            lru_key = self.order.pop(0)  # Remove the least recently used key
+            del self.cache_data[lru_key]
+            print(f"DISCARD: {lru_key}")
 
     def get(self, key):
-        """
-        Return the value linked to a given key, or None
-        """
-        if key is not None and key in self.cache_data.keys():
-            del self.usage[self.usage.index(key)]
-            self.usage.append(key)
-            return self.cache_data[key]
-        return None
+        """Get an item by key"""
+        if key is None or key not in self.cache_data:
+            return None
+
+        # Move key to the end of the list to mark it as recently used
+        self.order.remove(key)
+        self.order.append(key)
+
+        return self.cache_data[key]
